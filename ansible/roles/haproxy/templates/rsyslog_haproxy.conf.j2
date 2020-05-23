@@ -1,0 +1,5 @@
+$ModLoad imuxsock
+$AddUnixListenSocket /var/lib/haproxy/dev/log
+
+# Creating separate log files based on the severity
+local0.* /var/log/haproxy-traffic.log

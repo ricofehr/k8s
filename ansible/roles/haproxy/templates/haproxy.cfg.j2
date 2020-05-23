@@ -1,0 +1,33 @@
+global
+    log /dev/log local0 info
+    daemon
+    chroot /var/lib/haproxy
+    user haproxy
+    group haproxy
+    spread-checks 4
+    tune.bufsize 16384
+    stats socket /var/run/haproxy.stat level admin mode 600
+
+defaults
+    mode http
+    log global
+    retries 2
+    timeout connect 3000ms
+    timeout server 5000ms
+    timeout client 5000ms
+    timeout http-request 5s
+    maxconn 4096
+
+frontend kubernetes
+    bind *:6443
+    option tcplog
+    mode tcp
+    default_backend kubernetes-master-nodes
+
+backend kubernetes-master-nodes
+    mode tcp
+    balance roundrobin
+    option tcp-check
+    {% for server in haproxy_backend_servers %}
+        server {{ server.name }} {{ server.ip }}:6443 check fall 3 rise 2
+    {% endfor %}

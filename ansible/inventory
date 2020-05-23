@@ -1,5 +1,10 @@
+[loadbalancer]
+k8s-lb1 ansible_host=192.168.78.40 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_python_interpreter=/usr/bin/python3
+
 [master]
 k8s-master1 ansible_host=192.168.78.10 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_python_interpreter=/usr/bin/python3
+k8s-master2 ansible_host=192.168.78.11 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_python_interpreter=/usr/bin/python3
+k8s-master3 ansible_host=192.168.78.12 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_python_interpreter=/usr/bin/python3
 
 [nodes]
 k8s-node1 ansible_host=192.168.78.20 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_python_interpreter=/usr/bin/python3

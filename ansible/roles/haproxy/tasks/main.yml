@@ -1,0 +1,45 @@
+---
+
+- name: install haproxy
+  become: yes
+  apt:
+    name:
+      - haproxy
+    state: present
+
+- name: Haproxy cfg
+  template:
+    src: templates/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: Restart Haproxy
+  become: yes
+
+- name: Ensure haproxy is started
+  pause:
+    seconds: 10
+
+- name: Haproxy rsyslog
+  template:
+    src: templates/rsyslog_haproxy.conf.j2
+    dest: /etc/rsyslog.d/haproxy.conf
+  notify: Restart Rsyslog
+  become: yes
+
+- name: Start service haproxy, if not started
+  service:
+    name: haproxy
+    state: started
+  become: yes
+
+- name: Alow port 6643
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 6443
+    action: insert
+    jump: ACCEPT
+  become: yes
+
+- name: save iptables
+  shell: iptables-save > /etc/network/iptables.rules
+  become: yes

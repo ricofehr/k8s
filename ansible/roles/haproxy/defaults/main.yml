@@ -1,0 +1,9 @@
+---
+
+haproxy_backend_servers:
+  - name: k8s-master1
+    ip: 192.168.10.1
+  - name: k8s-master2
+    ip: 192.168.10.2
+  - name: k8s-master3
+    ip: 192.168.10.3

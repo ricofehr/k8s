@@ -1,0 +1,9 @@
+---
+
+haproxy_backend_servers:
+  - name: k8s-master1
+    ip: "{{ hostvars['k8s-master1']['ansible_host'] }}"
+  - name: k8s-master2
+    ip: "{{ hostvars['k8s-master2']['ansible_host'] }}"
+  - name: k8s-master3
+    ip: "{{ hostvars['k8s-master3']['ansible_host'] }}"

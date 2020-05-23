@@ -1,6 +1,14 @@
 # k8s master
+loadbalancers = {
+    "k8s-lb1" => "192.168.78.40"
+}
+
+
+# k8s master
 masters = {
-    "k8s-master1" => "192.168.78.10"
+    "k8s-master1" => "192.168.78.10",
+    "k8s-master2" => "192.168.78.11",
+    "k8s-master3" => "192.168.78.12"
 }
 
 # k8s nodes
@@ -19,7 +27,19 @@ Vagrant.configure("2") do |config|
     check_guest_additions = false
     functional_vboxsf = false
 
-    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box = "bento/ubuntu-20.04"
+
+    loadbalancers.each do |name, ip|
+      config.vm.define name do |machine|
+        machine.vm.hostname = name
+        machine.vm.network :private_network, ip: ip
+        machine.vm.provider :virtualbox do |v|
+          v.name = name
+          v.memory = 2048
+          v.cpus = 2
+        end
+      end
+    end
 
     masters.each do |name, ip|
       config.vm.define name do |machine|
@@ -50,6 +70,7 @@ Vagrant.configure("2") do |config|
             ansible.extra_vars = { global_ci_install: "#{ENV['CI_INSTALL']}" }
             ansible.verbose = false
             ansible.limit = "all"
+            # ansible.tags = "k8s"
           end
         end
       end

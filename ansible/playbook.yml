@@ -1,5 +1,15 @@
 ---
 - hosts:
+    - loadbalancer
+  serial: 1
+  become: false
+  strategy: linear
+  roles:
+    - role: systemd_dns
+    - role: base
+    - role: haproxy
+
+- hosts:
     - master
     - nodes
   serial: 1
@@ -7,15 +17,22 @@
   strategy: linear
   roles:
     - role: systemd_dns
+      tags: ['k8s']
     - role: base
+      tags: ['k8s']
     - role: cert
       when: inventory_hostname == 'k8s-master1'
+      tags: ['k8s']
     - role: docker
       become: true
+      tags: ['k8s']
     - role: docker_postinstall
+      tags: ['k8s']
     - role: kubernetes
       become: true
+      tags: ['k8s']
     - role: k8s
+      tags: ['k8s']
 
 - hosts:
     - master
